@@ -13,25 +13,24 @@ def home():
 # Chat API route
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_msg = request.json.get("message")
-
-    if not user_msg:
-        return jsonify({"reply": "No message received"})
-
     try:
+        data = request.get_json()
+        user_msg = data.get("message") if data else None
+
+        if not user_msg:
+            return jsonify({"reply": "Please enter a message."})
+
         response = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[
-                {"role": "user", "content": user_msg}
-            ]
+            messages=[{"role": "user", "content": user_msg}]
         )
 
         reply = response.choices[0].message.content
         return jsonify({"reply": reply})
 
     except Exception as e:
-        return jsonify({"reply": "Error: " + str(e)})
-
+        print("ERROR:", e)
+        return jsonify({"reply": "Server error occurred"})
 # Run app
 if __name__ == "__main__":
     app.run(debug=True)
