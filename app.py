@@ -7,10 +7,9 @@ app = Flask(__name__)
 client = OpenAI(api_key="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")
 
 # Home page
-@app.route("/")
+@app.route("/", methods=["GET", "HEAD"])
 def home():
     return render_template("index.html")
-
 # Chat API route
 @app.route("/chat", methods=["POST"])
 def chat():
