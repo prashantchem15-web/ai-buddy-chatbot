@@ -30,24 +30,18 @@ def chat():
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {
-                    "role": "system",
-                    "content": "You are AI Buddy, a friendly and helpful AI assistant."
-                },
-                {
-                    "role": "user",
-                    "content": user_message
-                }
+                {"role": "system", "content": "You are AI Buddy, a helpful AI assistant."},
+                {"role": "user", "content": user_message}
             ]
         )
 
-        reply = response.choices[0].message.content
-
-        return jsonify({"reply": reply})
+        return jsonify({
+            "reply": response.choices[0].message.content
+        })
 
     except Exception as e:
         print("ERROR:", e)
-        return jsonify({"reply": f"Error: {str(e)}"}), 500
+        return jsonify({"reply": str(e)}), 500
 
 
 if __name__ == "__main__":
