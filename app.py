@@ -4,13 +4,7 @@ import os
 
 app = Flask(__name__)
 
-# Get API key from Render Environment Variables
-api_key = os.getenv("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")
-
-if not api_key:
-    raise RuntimeError("OPENAI_API_KEY environment variable is not set.")
-
-client = OpenAI(api_key=api_key)
+client = OpenAI(api_key=os.environ["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"])
 
 
 @app.route("/")
@@ -26,30 +20,20 @@ def chat():
         if not data or "message" not in data:
             return jsonify({"reply": "Please enter a message."})
 
-        user_message = data["message"]
-
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {
-                    "role": "system",
-                    "content": "You are AI Buddy, a helpful AI assistant."
-                },
-                {
-                    "role": "user",
-                    "content": user_message
-                }
+                {"role": "user", "content": data["message"]}
             ]
         )
 
-        reply = response.choices[0].message.content
-
-        return jsonify({"reply": reply})
+        return jsonify({
+            "reply": response.choices[0].message.content
+        })
 
     except Exception as e:
-        print("ERROR:", e)
         return jsonify({"reply": str(e)}), 500
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)
