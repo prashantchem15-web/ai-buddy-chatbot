@@ -4,6 +4,7 @@ import os
 
 app = Flask(__name__)
 
+# Get API key from Render Environment Variables
 api_key = os.getenv("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")
 
 if not api_key:
@@ -30,14 +31,20 @@ def chat():
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are AI Buddy, a helpful AI assistant."},
-                {"role": "user", "content": user_message}
+                {
+                    "role": "system",
+                    "content": "You are AI Buddy, a helpful AI assistant."
+                },
+                {
+                    "role": "user",
+                    "content": user_message
+                }
             ]
         )
 
-        return jsonify({
-            "reply": response.choices[0].message.content
-        })
+        reply = response.choices[0].message.content
+
+        return jsonify({"reply": reply})
 
     except Exception as e:
         print("ERROR:", e)
@@ -45,4 +52,4 @@ def chat():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
