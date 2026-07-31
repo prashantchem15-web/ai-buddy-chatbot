@@ -1,16 +1,15 @@
 from flask import Flask, render_template, request, jsonify
-from openai import OpenAI
+import google.generativeai as genai
 import os
 
 app = Flask(__name__)
 
-client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 @app.route("/")
 def home():
     return render_template("index.html")
-
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -20,20 +19,16 @@ def chat():
         if not data or "message" not in data:
             return jsonify({"reply": "Please enter a message."})
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "user", "content": data["message"]}
-            ]
-        )
+        response = model.generate_content(data["message"])
 
         return jsonify({
-            "reply": response.choices[0].message.content
+            "reply": response.text
         })
 
     except Exception as e:
-        return jsonify({"reply": str(e)}), 500
-
+        return jsonify({
+            "reply": str(e)
+        }), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
