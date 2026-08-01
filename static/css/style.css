@@ -19,7 +19,8 @@ body{
 /* Sidebar */
 
 .sidebar{
-    width:270px;
+    width:220px;
+    min-width:220px
     background:#111827;
     border-right:1px solid #374151;
     display:flex;
