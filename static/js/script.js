@@ -1,72 +1,193 @@
-async function sendMessage() {
+const chatBox = document.getElementById("chat-box");
+const input = document.getElementById("message");
+const sidebar = document.getElementById("sidebar");
 
-    const input = document.getElementById("message");
-    const chatBox = document.getElementById("chat-box");
+/* -----------------------------
+   Sidebar Toggle
+------------------------------*/
 
-    const message = input.value.trim();
+function toggleSidebar(){
 
-    if (message === "") return;
+    sidebar.classList.toggle("active");
 
-    // User message
-    chatBox.innerHTML += `
-        <div class="message user">
-            <div class="bubble">${message}</div>
-        </div>
-    `;
+}
 
-    input.value = "";
+/* -----------------------------
+   Scroll Chat
+------------------------------*/
 
-    // Typing indicator
-    chatBox.innerHTML += `
-        <div class="message ai" id="typing">
-            <div class="bubble">🤖 AI Buddy is typing...</div>
-        </div>
-    `;
+function scrollBottom(){
 
     chatBox.scrollTop = chatBox.scrollHeight;
 
-    try {
+}
 
-        const response = await fetch("/chat", {
+/* -----------------------------
+   Add Message
+------------------------------*/
 
-            method: "POST",
+function addMessage(text,sender){
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+    const msg=document.createElement("div");
 
-            body: JSON.stringify({
-                message: message
-            })
+    msg.className="message "+sender;
 
-        });
+    if(sender==="ai"){
 
-        const data = await response.json();
-
-        document.getElementById("typing").remove();
-
-        chatBox.innerHTML += `
-            <div class="message ai">
-                <div class="bubble">${data.reply}</div>
-            </div>
+        msg.innerHTML=`
+        <div class="avatar">🤖</div>
+        <div class="bubble">${text}</div>
         `;
 
-        chatBox.scrollTop = chatBox.scrollHeight;
+    }else{
+
+        msg.innerHTML=`
+        <div class="bubble">${text}</div>
+        `;
 
     }
 
-    catch (error) {
+    chatBox.appendChild(msg);
 
-        document.getElementById("typing").remove();
+    scrollBottom();
 
-        chatBox.innerHTML += `
-            <div class="message ai">
-                <div class="bubble">
-                    ❌ Unable to connect to AI Buddy.
-                </div>
-            </div>
-        `;
+}
+
+/* -----------------------------
+   Typing Bubble
+------------------------------*/
+
+function typingBubble(){
+
+    const typing=document.createElement("div");
+
+    typing.className="message ai";
+
+    typing.id="typing";
+
+    typing.innerHTML=`
+    <div class="avatar">🤖</div>
+    <div class="bubble">
+    AI Buddy is typing...
+    </div>
+    `;
+
+    chatBox.appendChild(typing);
+
+    scrollBottom();
+
+}
+
+/* -----------------------------
+   Remove Typing
+------------------------------*/
+
+function removeTyping(){
+
+    const typing=document.getElementById("typing");
+
+    if(typing){
+
+        typing.remove();
 
     }
 
 }
+
+/* -----------------------------
+   Send Message
+------------------------------*/
+
+async function sendMessage(){
+
+    const text=input.value.trim();
+
+    if(text==="") return;
+
+    addMessage(text,"user");
+
+    input.value="";
+
+    typingBubble();
+
+    try{
+
+        const response=await fetch("/chat",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+                message:text
+            })
+
+        });
+
+        const data=await response.json();
+
+        removeTyping();
+
+        addMessage(data.reply,"ai");
+
+    }
+
+    catch(error){
+
+        removeTyping();
+
+        addMessage("⚠️ Unable to connect to AI.","ai");
+
+    }
+
+}
+
+/* -----------------------------
+   New Chat
+------------------------------*/
+
+function newChat(){
+
+    chatBox.innerHTML=`
+    <div class="message ai">
+
+        <div class="avatar">
+
+            🤖
+
+        </div>
+
+        <div class="bubble">
+
+            <strong>Hello 👋</strong>
+
+            <br><br>
+
+            New chat started.
+
+            <br><br>
+
+            Ask me anything!
+
+        </div>
+
+    </div>
+    `;
+
+}
+
+/* -----------------------------
+   Enter Key
+------------------------------*/
+
+input.addEventListener("keypress",function(e){
+
+    if(e.key==="Enter"){
+
+        sendMessage();
+
+    }
+
+});
