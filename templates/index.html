@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Buddy</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
 <div class="app">
 
-    <!-- Sidebar -->
     <aside class="sidebar">
 
-        <div class="logo">
+        <div class="brand">
+            <div class="logo">🤖</div>
 
-            <div class="logo-icon">🤖</div>
-
-            <h2>AI Buddy</h2>
-
+            <div>
+                <h2>AI Buddy</h2>
+                <span>Your AI Assistant</span>
+            </div>
         </div>
 
         <button class="new-chat" onclick="newChat()">
@@ -33,24 +35,28 @@
             <h3>Recent Chats</h3>
 
             <ul id="history-list">
-                <li>Welcome Chat</li>
+                <li>👋 Welcome</li>
             </ul>
 
         </div>
 
     </aside>
 
-    <!-- Main Area -->
 
-    <main class="main">
+    <main class="chat-area">
 
-        <header class="topbar">
+        <header>
 
-            <h1>AI Buddy</h1>
+            <div>
 
-            <span>Powered by Gemini</span>
+                <h1>AI Buddy</h1>
+
+                <p>Ask anything. Learn everything.</p>
+
+            </div>
 
         </header>
+
 
         <div id="chat-box" class="chat-box">
 
@@ -58,11 +64,15 @@
 
                 <div class="bubble">
 
-                    👋 Hello! I'm <b>AI Buddy</b>.
+                    👋 Hello!
 
                     <br><br>
 
-                    Ask me anything!
+                    I'm <b>AI Buddy</b>.
+
+                    <br><br>
+
+                    How can I help you today?
 
                 </div>
 
@@ -70,17 +80,20 @@
 
         </div>
 
+
         <div class="input-area">
 
             <input
                 id="message"
                 type="text"
-                placeholder="Message AI Buddy..."
+                placeholder="Type your message..."
                 onkeypress="if(event.key==='Enter') sendMessage()"
             >
 
             <button onclick="sendMessage()">
+
                 ➤
+
             </button>
 
         </div>
@@ -92,5 +105,4 @@
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
-
 </html>
