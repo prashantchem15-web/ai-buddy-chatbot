@@ -115,25 +115,21 @@ margin-bottom:30px;
 }
 
 .logo{
+    width:60px;
+    height:60px;
+    border-radius:18px;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:rgba(255,255,255,.08);
+    box-shadow:0 10px 25px rgba(124,58,237,.35);
+}
 
-width:60px;
-
-height:60px;
-
-border-radius:18px;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-font-size:30px;
-
-background:linear-gradient(135deg,#8b5cf6,#2563eb);
-
-box-shadow:0 0 25px rgba(124,58,237,.4);
-
+.logo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
 .brand h2{
