@@ -2,13 +2,14 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Segoe UI,Arial,sans-serif;
+    font-family:'Poppins',sans-serif;
 }
 
 body{
-    background:#0f172a;
-    color:white;
+    background:#0b1120;
     height:100vh;
+    overflow:hidden;
+    color:#fff;
 }
 
 .app{
@@ -16,64 +17,72 @@ body{
     height:100vh;
 }
 
-/* Sidebar */
+/* ================= Sidebar ================= */
 
 .sidebar{
-    width:220px;
-    min-width:220px
+    width:260px;
     background:#111827;
-    border-right:1px solid #374151;
+    border-right:1px solid rgba(255,255,255,.08);
     display:flex;
     flex-direction:column;
     padding:20px;
 }
 
-.logo{
+.brand{
     display:flex;
     align-items:center;
     gap:15px;
     margin-bottom:30px;
 }
 
-.logo-icon{
+.logo{
     width:55px;
     height:55px;
-    border-radius:50%;
-    background:#2563eb;
+    border-radius:15px;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
     display:flex;
     justify-content:center;
     align-items:center;
     font-size:28px;
 }
 
-.logo h2{
+.brand h2{
     font-size:24px;
+    font-weight:600;
+}
+
+.brand span{
+    color:#94a3b8;
+    font-size:13px;
 }
 
 .new-chat{
-    background:#2563eb;
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
     color:white;
     border:none;
     padding:15px;
     border-radius:12px;
     cursor:pointer;
-    font-size:16px;
+    font-size:15px;
+    font-weight:600;
     transition:.3s;
 }
 
 .new-chat:hover{
-    background:#1d4ed8;
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(37,99,235,.35);
 }
 
 .history{
     margin-top:30px;
     flex:1;
-    overflow:auto;
+    overflow-y:auto;
 }
 
 .history h3{
-    color:#9ca3af;
+    color:#94a3b8;
     margin-bottom:15px;
+    font-size:14px;
 }
 
 .history ul{
@@ -81,28 +90,23 @@ body{
 }
 
 .history li{
-    background:#1f2937;
     padding:12px;
-    margin-bottom:10px;
+    background:#1f2937;
     border-radius:10px;
+    margin-bottom:10px;
     cursor:pointer;
-    transition:.3s;
+    transition:.25s;
 }
 
 .history li:hover{
     background:#374151;
 }
 
-/* Main */
+/* ================= Chat Area ================= */
 
-.main{
+.chat-area{
     flex:1;
     display:flex;
     flex-direction:column;
-}
-
-.topbar{
-    background:#1f2937;
-    padding:20px 30px;
-    display:flex;
-    justify-content
+    background:#0f172a;
+    min
