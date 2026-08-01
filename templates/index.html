@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,54 +11,86 @@
 
 <body>
 
-<div class="container">
+<div class="app">
 
-    <div class="header">
-        <div class="logo">🤖</div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
 
-        <div>
-            <h1>AI Buddy</h1>
-            <p>Your Personal AI Assistant</p>
-        </div>
-    </div>
+        <div class="logo">
 
-    <div id="chat-box" class="chat-box">
+            <div class="logo-icon">🤖</div>
 
-        <div class="message ai">
-            <div class="bubble">
-                👋 Hello! I'm <b>AI Buddy</b>.<br><br>
-                Ask me anything!
-            </div>
+            <h2>AI Buddy</h2>
+
         </div>
 
-    </div>
-
-    <div class="input-area">
-
-        <input
-            type="text"
-            id="message"
-            placeholder="Message AI Buddy..."
-            onkeypress="if(event.key==='Enter') sendMessage()"
-        >
-
-        <button onclick="sendMessage()">
-            ➤
+        <button class="new-chat" onclick="newChat()">
+            ➕ New Chat
         </button>
 
-    </div>
+        <div class="history">
+
+            <h3>Recent Chats</h3>
+
+            <ul id="history-list">
+                <li>Welcome Chat</li>
+            </ul>
+
+        </div>
+
+    </aside>
+
+    <!-- Main Area -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <h1>AI Buddy</h1>
+
+            <span>Powered by Gemini</span>
+
+        </header>
+
+        <div id="chat-box" class="chat-box">
+
+            <div class="message ai">
+
+                <div class="bubble">
+
+                    👋 Hello! I'm <b>AI Buddy</b>.
+
+                    <br><br>
+
+                    Ask me anything!
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="input-area">
+
+            <input
+                id="message"
+                type="text"
+                placeholder="Message AI Buddy..."
+                onkeypress="if(event.key==='Enter') sendMessage()"
+            >
+
+            <button onclick="sendMessage()">
+                ➤
+            </button>
+
+        </div>
+
+    </main>
 
 </div>
 
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
-</html>
-        sendMessage();
-    }
-});
 
-</script>
-
-</body>
 </html>
