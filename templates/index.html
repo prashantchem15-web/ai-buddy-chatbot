@@ -1,78 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AI Buddy</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 </head>
 
 <body>
 
+<div class="background"></div>
+
 <div class="app">
 
-    <aside class="sidebar">
+    <!-- Sidebar -->
 
-        <div class="brand">
-            <div class="logo">🤖</div>
+    <aside class="sidebar" id="sidebar">
 
-            <div>
-                <h2>AI Buddy</h2>
-                <span>Your AI Assistant</span>
+        <div class="sidebar-top">
+
+            <div class="brand">
+
+                <div class="logo">
+
+                    🤖
+
+                </div>
+
+                <div>
+
+                    <h2>AI Buddy</h2>
+
+                    <span>Your Intelligent Assistant</span>
+
+                </div>
+
             </div>
-        </div>
 
-        <button class="new-chat" onclick="newChat()">
-            ➕ New Chat
-        </button>
+            <button class="new-chat" onclick="newChat()">
+
+                <i class="fa-solid fa-plus"></i>
+
+                New Chat
+
+            </button>
+
+        </div>
 
         <div class="history">
 
             <h3>Recent Chats</h3>
 
             <ul id="history-list">
-                <li>👋 Welcome</li>
+
+                <li>
+
+                    <i class="fa-solid fa-message"></i>
+
+                    Welcome
+
+                </li>
+
             </ul>
+
+        </div>
+
+        <div class="sidebar-bottom">
+
+            <button class="menu-btn">
+
+                <i class="fa-solid fa-gear"></i>
+
+                Settings
+
+            </button>
 
         </div>
 
     </aside>
 
+    <!-- Main Chat -->
 
-    <main class="chat-area">
+    <main class="main">
 
-        <header>
+        <header class="topbar">
+
+            <button class="toggle-btn" onclick="toggleSidebar()">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
 
             <div>
 
                 <h1>AI Buddy</h1>
 
-                <p>Ask anything. Learn everything.</p>
+                <p>Ask Anything • Learn Everything</p>
 
             </div>
 
         </header>
 
+        <!-- Chat -->
 
-        <div id="chat-box" class="chat-box">
+        <div class="chat-box" id="chat-box">
 
             <div class="message ai">
 
+                <div class="avatar">
+
+                    🤖
+
+                </div>
+
                 <div class="bubble">
 
-                    👋 Hello!
+                    <strong>Hello 👋</strong>
 
                     <br><br>
 
-                    I'm <b>AI Buddy</b>.
+                    Welcome to <b>AI Buddy</b>.
 
                     <br><br>
 
-                    How can I help you today?
+                    Ask me anything.
 
                 </div>
 
@@ -80,19 +146,33 @@
 
         </div>
 
+        <!-- Input -->
 
         <div class="input-area">
 
+            <button class="icon-btn">
+
+                <i class="fa-solid fa-paperclip"></i>
+
+            </button>
+
             <input
+
                 id="message"
+
                 type="text"
-                placeholder="Type your message..."
+
+                placeholder="Message AI Buddy..."
+
                 onkeypress="if(event.key==='Enter') sendMessage()"
+
             >
 
-            <button onclick="sendMessage()">
+            <button class="send-btn"
 
-                ➤
+                onclick="sendMessage()">
+
+                <i class="fa-solid fa-paper-plane"></i>
 
             </button>
 
@@ -105,4 +185,5 @@
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
+
 </html>
