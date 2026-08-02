@@ -112,18 +112,7 @@ gap:15px;
 
 margin-bottom:30px;
 
-}
 
-.logo{
-    width:60px;
-    height:60px;
-    border-radius:18px;
-    overflow:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:rgba(255,255,255,.08);
-    box-shadow:0 10px 25px rgba(124,58,237,.35);
 }
 
 .logo img{
