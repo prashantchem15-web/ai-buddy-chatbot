@@ -1,101 +1,87 @@
+// =======================================
+// AI Buddy - script.js
+// Part 1
+// =======================================
+
+// Elements
 const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("message");
 const sidebar = document.getElementById("sidebar");
 
-// =========================
 // Chat History
-// =========================
-
 let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
 
-/* -----------------------------
-   Sidebar Toggle
-------------------------------*/
+// =======================================
+// Sidebar
+// =======================================
 
-function toggleSidebar(){
-
+function toggleSidebar() {
     sidebar.classList.toggle("active");
-
 }
 
-/* -----------------------------
-   Scroll Chat
-------------------------------*/
+// =======================================
+// Scroll Chat
+// =======================================
 
-function scrollBottom(){
-
+function scrollBottom() {
     chatBox.scrollTop = chatBox.scrollHeight;
-
 }
 
-   // =========================
-// Save Chat
-// =========================
+// =======================================
+// Save History
+// =======================================
 
-function saveHistory(){
-
+function saveHistory() {
     localStorage.setItem(
         "chatHistory",
         JSON.stringify(chatHistory)
     );
-
 }
 
-// =========================
-// Load Chat
-// =========================
+// =======================================
+// Load History
+// =======================================
 
-function loadHistory(){
+function loadHistory() {
 
-    console.log(chatHistory);
+    if (chatHistory.length === 0) {
+        return;
+    }
 
-    if(chatHistory.length===0) return;
+    chatBox.innerHTML = "";
 
-    chatBox.innerHTML="";
-
-    chatHistory.forEach(msg=>{
-
-        addMessage(msg.text,msg.sender,false);
-
+    chatHistory.forEach(msg => {
+        addMessage(msg.text, msg.sender, false);
     });
 
 }
-/* -----------------------------
-   Add Message
-------------------------------*/
 
-function addMessage(text,sender,save=true){
+// =======================================
+// Add Message
+// =======================================
 
-    const message=document.createElement("div");
+function addMessage(text, sender, save = true) {
 
-    message.className="message "+sender;
+    const message = document.createElement("div");
 
-    if(sender==="ai"){
+    message.className = "message " + sender;
 
-        message.innerHTML=`
+    if (sender === "ai") {
 
-        <div class="avatar">🤖</div>
+        message.innerHTML = `
+            <div class="avatar">🤖</div>
 
-        <div class="bubble">
-
-        ${text}
-
-        </div>
-
+            <div class="bubble">
+                ${text}
+            </div>
         `;
 
-    }
+    } else {
 
-    else{
-
-        message.innerHTML=`
-
-        <div class="bubble">
-
-        ${text}
-
-        </div>
-
+        message.innerHTML = `
+            <div class="bubble">
+                ${text}
+            </div>
         `;
 
     }
@@ -104,39 +90,37 @@ function addMessage(text,sender,save=true){
 
     scrollBottom();
 
-    if(save){
+    if (save) {
 
         chatHistory.push({
-
-            text:text,
-
-            sender:sender
-
+            text: text,
+            sender: sender
         });
 
         saveHistory();
 
     }
 
-    }
+}
 
-/* -----------------------------
-   Typing Bubble
-------------------------------*/
+// =======================================
+// Typing Bubble
+// =======================================
 
-function typingBubble(){
+function typingBubble() {
 
-    const typing=document.createElement("div");
+    const typing = document.createElement("div");
 
-    typing.className="message ai";
+    typing.className = "message ai";
 
-    typing.id="typing";
+    typing.id = "typing";
 
-    typing.innerHTML=`
-    <div class="avatar">🤖</div>
-    <div class="bubble">
-    AI Buddy is typing...
-    </div>
+    typing.innerHTML = `
+        <div class="avatar">🤖</div>
+
+        <div class="bubble">
+            AI Buddy is typing...
+        </div>
     `;
 
     chatBox.appendChild(typing);
@@ -145,124 +129,112 @@ function typingBubble(){
 
 }
 
-/* -----------------------------
-   Remove Typing
-------------------------------*/
+// =======================================
+// Remove Typing
+// =======================================
 
-function removeTyping(){
+function removeTyping() {
 
-    const typing=document.getElementById("typing");
+    const typing = document.getElementById("typing");
 
-    if(typing){
-
+    if (typing) {
         typing.remove();
-
     }
 
 }
 
-/* -----------------------------
-   Send Message
-------------------------------*/
+// =======================================
+// Send Message
+// =======================================
 
-async function sendMessage(){
+async function sendMessage() {
 
-    const text=input.value.trim();
+    const text = input.value.trim();
 
-    if(text==="") return;
+    if (text === "") return;
 
-    addMessage(text,"user");
+    addMessage(text, "user");
 
-    input.value="";
+    input.value = "";
 
     typingBubble();
 
-    try{
+    try {
 
-        const response=await fetch("/chat",{
-
-            method:"POST",
-
-            headers:{
-                "Content-Type":"application/json"
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-
-            body:JSON.stringify({
-                message:text
+            body: JSON.stringify({
+                message: text
             })
-
         });
 
-        const data=await response.json();
+        const data = await response.json();
 
         removeTyping();
 
-        addMessage(data.reply,"ai");
+        if (data.reply) {
+            addMessage(data.reply, "ai");
+        } else {
+            addMessage("⚠️ No response received.", "ai");
+        }
 
-    }
+    } catch (error) {
 
-    catch(error){
+        console.error(error);
 
         removeTyping();
 
-        addMessage("⚠️ Unable to connect to AI.","ai");
+        addMessage("⚠️ Unable to connect to AI Buddy.", "ai");
 
     }
 
 }
 
-/* -----------------------------
-   New Chat
-------------------------------*/
+// =======================================
+// New Chat
+// =======================================
 
-function newChat(){
+function newChat() {
 
-    chatHistory=[];
+    chatHistory = [];
 
     saveHistory();
 
-    chatBox.innerHTML=`
+    chatBox.innerHTML = `
+        <div class="message ai">
+            <div class="avatar">🤖</div>
 
-    <div class="message ai">
-
-        <div class="avatar">
-
-        🤖
-
+            <div class="bubble">
+                <strong>Hello 👋</strong><br><br>
+                Welcome to <b>AI Buddy</b>.<br><br>
+                Ask me anything.
+            </div>
         </div>
-
-        <div class="bubble">
-
-        <strong>Hello 👋</strong>
-
-        <br><br>
-
-        New chat started.
-
-        </div>
-
-    </div>
-
     `;
 
 }
-/* -----------------------------
-   Enter Key
-------------------------------*/
 
-input.addEventListener("keypress",function(e){
+// =======================================
+// Enter Key
+// =======================================
 
-    if(e.key==="Enter"){
+input.addEventListener("keypress", function (e) {
 
+    if (e.key === "Enter") {
         sendMessage();
-
     }
 
 });
-window.onload = () => {
 
-    console.log("Loading history...");
+// =======================================
+// Load Saved Chat
+// =======================================
+
+document.addEventListener("DOMContentLoaded", () => {
 
     loadHistory();
 
-};
+});
