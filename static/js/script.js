@@ -44,6 +44,10 @@ function saveHistory() {
 
 function loadHistory() {
 
+    console.log("loadHistory called");
+
+    console.log(chatHistory);
+
     if (chatHistory.length === 0) {
         return;
     }
