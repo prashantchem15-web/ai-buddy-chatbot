@@ -28,36 +28,96 @@ function scrollBottom(){
 
 }
 
+   // =========================
+// Save Chat
+// =========================
+
+function saveHistory(){
+
+    localStorage.setItem(
+        "chatHistory",
+        JSON.stringify(chatHistory)
+    );
+
+}
+
+// =========================
+// Load Chat
+// =========================
+
+function loadHistory(){
+
+    if(chatHistory.length===0) return;
+
+    chatBox.innerHTML="";
+
+    chatHistory.forEach(msg=>{
+
+        addMessage(msg.text,msg.sender,false);
+
+    });
+
+}
+
+}
+
 /* -----------------------------
    Add Message
 ------------------------------*/
 
-function addMessage(text,sender){
+function addMessage(text,sender,save=true){
 
-    const msg=document.createElement("div");
+    const message=document.createElement("div");
 
-    msg.className="message "+sender;
+    message.className="message "+sender;
 
     if(sender==="ai"){
 
-        msg.innerHTML=`
+        message.innerHTML=`
+
         <div class="avatar">🤖</div>
-        <div class="bubble">${text}</div>
-        `;
 
-    }else{
+        <div class="bubble">
 
-        msg.innerHTML=`
-        <div class="bubble">${text}</div>
+        ${text}
+
+        </div>
+
         `;
 
     }
 
-    chatBox.appendChild(msg);
+    else{
+
+        message.innerHTML=`
+
+        <div class="bubble">
+
+        ${text}
+
+        </div>
+
+        `;
+
+    }
+
+    chatBox.appendChild(message);
 
     scrollBottom();
 
-}
+    if(save){
+
+        chatHistory.push({
+
+            text:text,
+
+            sender:sender
+
+        });
+
+        saveHistory();
+
+    }
 
 /* -----------------------------
    Typing Bubble
@@ -156,34 +216,35 @@ async function sendMessage(){
 
 function newChat(){
 
+    chatHistory=[];
+
+    saveHistory();
+
     chatBox.innerHTML=`
+
     <div class="message ai">
 
         <div class="avatar">
 
-            🤖
+        🤖
 
         </div>
 
         <div class="bubble">
 
-            <strong>Hello 👋</strong>
+        <strong>Hello 👋</strong>
 
-            <br><br>
+        <br><br>
 
-            New chat started.
-
-            <br><br>
-
-            Ask me anything!
+        New chat started.
 
         </div>
 
     </div>
+
     `;
 
 }
-
 /* -----------------------------
    Enter Key
 ------------------------------*/
@@ -197,3 +258,8 @@ input.addEventListener("keypress",function(e){
     }
 
 });
+window.onload=function(){
+
+    loadHistory();
+
+}
