@@ -2,6 +2,12 @@ const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("message");
 const sidebar = document.getElementById("sidebar");
 
+// =========================
+// Chat History
+// =========================
+
+let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+
 /* -----------------------------
    Sidebar Toggle
 ------------------------------*/
