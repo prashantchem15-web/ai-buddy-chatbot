@@ -47,6 +47,8 @@ function saveHistory(){
 
 function loadHistory(){
 
+    console.log(chatHistory);
+
     if(chatHistory.length===0) return;
 
     chatBox.innerHTML="";
@@ -58,7 +60,6 @@ function loadHistory(){
     });
 
 }
-
 /* -----------------------------
    Add Message
 ------------------------------*/
@@ -258,8 +259,10 @@ input.addEventListener("keypress",function(e){
     }
 
 });
-window.onload=function(){
+window.onload = () => {
+
+    console.log("Loading history...");
 
     loadHistory();
 
-}
+};
