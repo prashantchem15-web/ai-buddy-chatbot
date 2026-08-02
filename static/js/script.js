@@ -59,8 +59,6 @@ function loadHistory(){
 
 }
 
-}
-
 /* -----------------------------
    Add Message
 ------------------------------*/
@@ -116,6 +114,8 @@ function addMessage(text,sender,save=true){
         });
 
         saveHistory();
+
+    }
 
     }
 
