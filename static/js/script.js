@@ -54,8 +54,9 @@ function loadHistory() {
 
     chatBox.innerHTML = "";
 
-    chatHistory.forEach(msg => {
-        addMessage(msg.text, msg.sender, false);
+   chatHistory.forEach(msg => {
+    console.log("Adding message:", msg);
+    addMessage(msg.text, msg.sender, false);
     });
 
 }
