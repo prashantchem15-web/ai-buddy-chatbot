@@ -78,7 +78,9 @@ function addMessage(text, sender, save = true) {
 
     <div class="bubble">
 
-        <div class="message-text">${text}</div>
+       <div class="message-text">
+    ${marked.parse(text)}
+</div>
 
         <button class="copy-btn" onclick="copyMessage(this)">
             📋 Copy
@@ -98,6 +100,10 @@ function addMessage(text, sender, save = true) {
     }
 
     chatBox.appendChild(message);
+
+    message.querySelectorAll("pre code").forEach((block) => {
+    hljs.highlightElement(block);
+});
 
     scrollBottom();
 
