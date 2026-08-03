@@ -278,24 +278,47 @@ const fileInput = document.getElementById("fileInput");
 
 fileInput.addEventListener("change", uploadFile);
 
-function uploadFile() {
+async function uploadFile() {
 
     const file = fileInput.files[0];
 
     if (!file) return;
 
-    addMessage(
-        `📎 Uploaded: <b>${file.name}</b>`,
-        "user"
-    );
+    const formData = new FormData();
 
-    addMessage(
-        `✅ File received.<br><br>
-        <b>${file.name}</b><br><br>
-        File support is being processed...`,
-        "ai"
-    );
+    formData.append("file", file);
+
+    try {
+
+        const response = await fetch("/upload", {
+
+            method: "POST",
+
+            body: formData
+
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            addMessage(`📎 Uploaded: <b>${data.filename}</b>`, "user");
+
+            addMessage(`✅ File uploaded successfully!`, "ai");
+
+        } else {
+
+            addMessage("❌ Upload failed.", "ai");
+
+        }
+
+    } catch (err) {
+
+        addMessage("⚠️ Server error while uploading.", "ai");
+
+    }
 
     fileInput.value = "";
 
 }
+    
