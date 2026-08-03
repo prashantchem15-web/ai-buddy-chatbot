@@ -780,3 +780,26 @@ min-width:42px;
     }
 
 }
+
+
+pre{
+
+    background:#0f172a;
+
+    padding:16px;
+
+    border-radius:12px;
+
+    overflow-x:auto;
+
+    margin-top:12px;
+
+}
+
+code{
+
+    font-family:Consolas, monospace;
+
+    font-size:14px;
+
+}
