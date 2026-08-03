@@ -675,3 +675,38 @@ min-width:42px;
 }
 
 }
+.copy-btn{
+
+    margin-top:12px;
+
+    border:none;
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:6px 12px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-size:13px;
+
+    transition:.3s;
+
+}
+
+.copy-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+.message-text{
+
+    white-space:pre-wrap;
+
+    word-wrap:break-word;
+
+}
