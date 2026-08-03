@@ -710,3 +710,73 @@ min-width:42px;
     word-wrap:break-word;
 
 }
+
+/* ==========================
+   Typing Animation
+========================== */
+
+.typing-bubble{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:14px 18px;
+
+}
+
+.typing-bubble span{
+
+    width:10px;
+
+    height:10px;
+
+    background:white;
+
+    border-radius:50%;
+
+    animation:typing 1.2s infinite ease-in-out;
+
+}
+
+.typing-bubble span:nth-child(2){
+
+    animation-delay:.2s;
+
+}
+
+.typing-bubble span:nth-child(3){
+
+    animation-delay:.4s;
+
+}
+
+@keyframes typing{
+
+    0%{
+
+        transform:translateY(0);
+
+        opacity:.4;
+
+    }
+
+    50%{
+
+        transform:translateY(-8px);
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+        opacity:.4;
+
+    }
+
+}
