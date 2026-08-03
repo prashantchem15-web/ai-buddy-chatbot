@@ -129,8 +129,12 @@ function typingBubble() {
     typing.innerHTML = `
         <div class="avatar">🤖</div>
 
-        <div class="bubble">
-            AI Buddy is typing...
+        <div class="bubble typing-bubble">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
         </div>
     `;
 
@@ -139,7 +143,6 @@ function typingBubble() {
     scrollBottom();
 
 }
-
 // =======================================
 // Remove Typing
 // =======================================
@@ -153,7 +156,6 @@ function removeTyping() {
     }
 
 }
-
 // =======================================
 // Send Message
 // =======================================
