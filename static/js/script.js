@@ -273,3 +273,29 @@ function copyMessage(button) {
     }, 2000);
 
 }
+
+const fileInput = document.getElementById("fileInput");
+
+fileInput.addEventListener("change", uploadFile);
+
+function uploadFile() {
+
+    const file = fileInput.files[0];
+
+    if (!file) return;
+
+    addMessage(
+        `📎 Uploaded: <b>${file.name}</b>`,
+        "user"
+    );
+
+    addMessage(
+        `✅ File received.<br><br>
+        <b>${file.name}</b><br><br>
+        File support is being processed...`,
+        "ai"
+    );
+
+    fileInput.value = "";
+
+}
