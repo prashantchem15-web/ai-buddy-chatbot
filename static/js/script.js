@@ -73,13 +73,19 @@ function addMessage(text, sender, save = true) {
 
     if (sender === "ai") {
 
-        message.innerHTML = `
-            <div class="avatar">🤖</div>
+       message.innerHTML = `
+    <div class="avatar">🤖</div>
 
-            <div class="bubble">
-                ${text}
-            </div>
-        `;
+    <div class="bubble">
+
+        <div class="message-text">${text}</div>
+
+        <button class="copy-btn" onclick="copyMessage(this)">
+            📋 Copy
+        </button>
+
+    </div>
+`;
 
     } else {
 
@@ -243,3 +249,19 @@ document.addEventListener("DOMContentLoaded", () => {
     loadHistory();
 
 });
+
+function copyMessage(button) {
+
+    const text = button.parentElement.querySelector(".message-text").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    button.innerHTML = "✅ Copied";
+
+    setTimeout(() => {
+
+        button.innerHTML = "📋 Copy";
+
+    }, 2000);
+
+}
