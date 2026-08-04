@@ -274,10 +274,6 @@ function copyMessage(button) {
 
 }
 
-const fileInput = document.getElementById("fileInput");
-
-fileInput.addEventListener("change", uploadFile);
-
 async function uploadFile() {
 
     const file = fileInput.files[0];
@@ -291,12 +287,27 @@ async function uploadFile() {
     try {
 
         const response = await fetch("/upload", {
-
             method: "POST",
-
             body: formData
-
         });
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            addMessage(`📎 Uploaded: <b>${data.filename}</b>`, "user");
+
+            addMessage(`✅ File uploaded successfully!`, "ai");
+
+        }
+
+    } catch (err) {
+
+        addMessage("⚠️ Upload failed.", "ai");
+
+    }
+
+}
 
         const data = await response.json();
 
