@@ -150,6 +150,15 @@
         <!-- Input -->
 
         <div class="input-area">
+            <div id="preview-area" class="preview-area" style="display:none;">
+
+    <img id="preview-image">
+
+    <div id="preview-name"></div>
+
+    <button onclick="removePreview()">❌</button>
+
+</div>
 
            <input
     type="file"
@@ -157,13 +166,15 @@
     hidden
     accept=".pdf,.txt,.png,.jpg,.jpeg">
 
-<button
-    class="icon-btn"
-    onclick="document.getElementById('fileInput').click()">
-
+<label for="file-input" class="icon-btn">
     <i class="fa-solid fa-paperclip"></i>
+</label>
 
-</button>
+<input
+    type="file"
+    id="file-input"
+    hidden
+    accept="image/*,.pdf,.txt,.doc,.docx">
 
            <input
     id="message"
