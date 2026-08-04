@@ -7,6 +7,7 @@
 const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("message");
 const sidebar = document.getElementById("sidebar");
+const fileInput = document.getElementById("file-input");
 
 // Chat History
 let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
@@ -272,8 +273,6 @@ function copyMessage(button) {
 
     }, 2000);
 
-}
-
 async function uploadFile() {
 
     const file = fileInput.files[0];
@@ -299,24 +298,6 @@ async function uploadFile() {
 
             addMessage(`✅ File uploaded successfully!`, "ai");
 
-        }
-
-    } catch (err) {
-
-        addMessage("⚠️ Upload failed.", "ai");
-
-    }
-
-}
-
-        const data = await response.json();
-
-        if (data.success) {
-
-            addMessage(`📎 Uploaded: <b>${data.filename}</b>`, "user");
-
-            addMessage(`✅ File uploaded successfully!`, "ai");
-
         } else {
 
             addMessage("❌ Upload failed.", "ai");
@@ -332,4 +313,6 @@ async function uploadFile() {
     fileInput.value = "";
 
 }
-    
+
+
+
