@@ -314,5 +314,60 @@ async function uploadFile() {
 
 }
 
+// =======================================
+// Image Preview
+// =======================================
 
+const previewArea = document.getElementById("preview-area");
+const previewImage = document.getElementById("preview-image");
+const previewName = document.getElementById("preview-name");
+const fileInput = document.getElementById("file-input");
+
+fileInput.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (!file) return;
+
+    previewArea.style.display = "flex";
+
+    previewName.innerText = file.name;
+
+    if (file.type.startsWith("image/")) {
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            previewImage.src = e.target.result;
+
+            previewImage.style.display = "block";
+
+        };
+
+        reader.readAsDataURL(file);
+
+    } else {
+
+        previewImage.style.display = "none";
+
+    }
+
+});
+
+// =======================================
+// Remove Preview
+// =======================================
+
+function removePreview() {
+
+    fileInput.value = "";
+
+    previewArea.style.display = "none";
+
+    previewImage.src = "";
+
+    previewName.innerText = "";
+
+}
 
