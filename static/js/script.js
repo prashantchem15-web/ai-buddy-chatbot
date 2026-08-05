@@ -8,7 +8,6 @@ const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("message");
 const sidebar = document.getElementById("sidebar");
 const fileInput = document.getElementById("file-input");
-
 // Chat History
 let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
 
@@ -273,6 +272,8 @@ function copyMessage(button) {
 
     }, 2000);
 
+}
+
 async function uploadFile() {
 
     const file = fileInput.files[0];
@@ -321,7 +322,6 @@ async function uploadFile() {
 const previewArea = document.getElementById("preview-area");
 const previewImage = document.getElementById("preview-image");
 const previewName = document.getElementById("preview-name");
-const fileInput = document.getElementById("file-input");
 
 fileInput.addEventListener("change", function () {
 
