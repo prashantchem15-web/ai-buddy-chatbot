@@ -10,6 +10,7 @@ const sidebar = document.getElementById("sidebar");
 const fileInput = document.getElementById("file-input");
 // Chat History
 let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+console.log(chatHistory);
 
 // =======================================
 // Sidebar
@@ -48,8 +49,9 @@ function loadHistory() {
 
     console.log(chatHistory);
 
-    if (chatHistory.length === 0) {
-        return;
+  if (!Array.isArray(chatHistory) || chatHistory.length === 0) {
+    return;
+}
     }
 
     chatBox.innerHTML = "";
@@ -218,19 +220,20 @@ async function sendMessage() {
 
 function newChat() {
 
-    chatHistory = [];
-
-    saveHistory();
-
     chatBox.innerHTML = `
         <div class="message ai">
             <div class="avatar">🤖</div>
 
             <div class="bubble">
-                <strong>Hello 👋</strong><br><br>
-                Welcome to <b>AI Buddy</b>.<br><br>
-                Ask me anything.
+
+                <strong>Hello 👋</strong>
+
+                <br><br>
+
+                New chat started.
+
             </div>
+
         </div>
     `;
 
