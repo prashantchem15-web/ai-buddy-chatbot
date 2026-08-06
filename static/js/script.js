@@ -109,16 +109,18 @@ function addMessage(text, sender, save = true) {
 
     scrollBottom();
 
-    if (save) {
+   if (save) {
 
-        chatHistory.push({
-            text: text,
-            sender: sender
-        });
+    chatHistory.push({
+        text: text,
+        sender: sender
+    });
 
-        saveHistory();
+    console.log("Saving:", chatHistory);
 
-    }
+    saveHistory();
+
+}
 
 }
 
