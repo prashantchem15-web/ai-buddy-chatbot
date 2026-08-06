@@ -81,18 +81,35 @@
 
         </div>
 
-        <div class="sidebar-bottom">
+      <div class="sidebar-bottom">
 
-            <button class="menu-btn">
+    <button id="login-btn" class="menu-btn" onclick="googleLogin()">
+        <i class="fa-brands fa-google"></i>
+        Sign in with Google
+    </button>
 
-                <i class="fa-solid fa-gear"></i>
+    <div id="user-info" style="text-align:center; margin-top:15px;">
 
-                Settings
+        <img
+            id="user-photo"
+            src=""
+            style="width:60px;height:60px;border-radius:50%;display:block;margin:auto;"
+        >
 
-            </button>
+        <p id="user-name" style="margin-top:8px;"></p>
 
-        </div>
+        <button
+            id="logout-btn"
+            class="menu-btn"
+            onclick="logout()"
+            style="display:none;"
+        >
+            Logout
+        </button>
 
+    </div>
+
+</div>
     </aside>
 
     <!-- Main Chat -->
