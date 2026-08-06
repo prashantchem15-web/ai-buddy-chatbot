@@ -46,23 +46,20 @@ function saveHistory() {
 function loadHistory() {
 
     console.log("loadHistory called");
-
     console.log(chatHistory);
 
-  if (!Array.isArray(chatHistory) || chatHistory.length === 0) {
-    return;
-}
+    if (!Array.isArray(chatHistory) || chatHistory.length === 0) {
+        return;
     }
 
     chatBox.innerHTML = "";
 
-   chatHistory.forEach(msg => {
-    console.log("Adding message:", msg);
-    addMessage(msg.text, msg.sender, false);
+    chatHistory.forEach(msg => {
+        console.log("Adding message:", msg);
+        addMessage(msg.text, msg.sender, false);
     });
 
 }
-
 // =======================================
 // Add Message
 // =======================================
