@@ -1,65 +1,40 @@
 // =======================================
 // AI Buddy - script.js
-// Part 1
 // =======================================
 
+
+// =======================================
 // Elements
+// =======================================
+
 const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("message");
 const sidebar = document.getElementById("sidebar");
 const fileInput = document.getElementById("file-input");
-// Chat History
-let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
-console.log(chatHistory);
+
 
 // =======================================
 // Sidebar
 // =======================================
 
 function toggleSidebar() {
+
     sidebar.classList.toggle("active");
+
 }
 
+
 // =======================================
-// Scroll Chat
+// Scroll
 // =======================================
 
 function scrollBottom() {
+
     chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// =======================================
-// Save History
-// =======================================
-
-function saveHistory() {
-    localStorage.setItem(
-        "chatHistory",
-        JSON.stringify(chatHistory)
-    );
-}
-
-// =======================================
-// Load History
-// =======================================
-
-function loadHistory() {
-
-    console.log("loadHistory called");
-    console.log(chatHistory);
-
-    if (!Array.isArray(chatHistory) || chatHistory.length === 0) {
-        return;
-    }
-
-    chatBox.innerHTML = "";
-
-    chatHistory.forEach(msg => {
-        console.log("Adding message:", msg);
-        addMessage(msg.text, msg.sender, false);
-    });
 
 }
+
+
 // =======================================
 // Add Message
 // =======================================
@@ -70,25 +45,37 @@ function addMessage(text, sender, save = true) {
 
     message.className = "message " + sender;
 
+
+    // ===================================
+    // AI Message
+    // ===================================
+
     if (sender === "ai") {
 
-       message.innerHTML = `
-    <div class="avatar">🤖</div>
+        message.innerHTML = `
+            <div class="avatar">🤖</div>
 
-    <div class="bubble">
+            <div class="bubble">
 
-       <div class="message-text">
-    ${marked.parse(text)}
-</div>
+                <div class="message-text">
+                    ${marked.parse(text)}
+                </div>
 
-        <button class="copy-btn" onclick="copyMessage(this)">
-            📋 Copy
-        </button>
+                <button class="copy-btn" onclick="copyMessage(this)">
+                    📋 Copy
+                </button>
 
-    </div>
-`;
+            </div>
+        `;
 
-    } else {
+    }
+
+
+    // ===================================
+    // User Message
+    // ===================================
+
+    else {
 
         message.innerHTML = `
             <div class="bubble">
@@ -98,28 +85,43 @@ function addMessage(text, sender, save = true) {
 
     }
 
+
     chatBox.appendChild(message);
 
+
+    // ===================================
+    // Highlight Code
+    // ===================================
+
     message.querySelectorAll("pre code").forEach((block) => {
-    hljs.highlightElement(block);
-});
+
+        hljs.highlightElement(block);
+
+    });
+
 
     scrollBottom();
 
-   if (save) {
 
-    chatHistory.push({
-        text: text,
-        sender: sender
-    });
+    // ===================================
+    // Save to Firestore
+    // ===================================
 
-    console.log("Saving:", chatHistory);
+    if (save && window.currentUser) {
 
-    saveHistory();
+        if (typeof window.saveMessageToFirestore === "function") {
+
+            window.saveMessageToFirestore(
+                text,
+                sender
+            );
+
+        }
+
+    }
 
 }
 
-}
 
 // =======================================
 // Typing Bubble
@@ -150,6 +152,8 @@ function typingBubble() {
     scrollBottom();
 
 }
+
+
 // =======================================
 // Remove Typing
 // =======================================
@@ -159,10 +163,14 @@ function removeTyping() {
     const typing = document.getElementById("typing");
 
     if (typing) {
+
         typing.remove();
+
     }
 
 }
+
+
 // =======================================
 // Send Message
 // =======================================
@@ -171,47 +179,185 @@ async function sendMessage() {
 
     const text = input.value.trim();
 
-    if (text === "") return;
+    if (text === "") {
 
+        return;
+
+    }
+
+
+    // Show user message
     addMessage(text, "user");
 
     input.value = "";
 
     typingBubble();
 
+
     try {
 
         const response = await fetch("/chat", {
+
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
+
             body: JSON.stringify({
                 message: text
             })
+
         });
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server returned " + response.status
+            );
+
+        }
+
 
         const data = await response.json();
 
+
         removeTyping();
+
 
         if (data.reply) {
-            addMessage(data.reply, "ai");
-        } else {
-            addMessage("⚠️ No response received.", "ai");
+
+            addMessage(
+                data.reply,
+                "ai"
+            );
+
         }
 
-    } catch (error) {
+        else {
 
-        console.error(error);
+            addMessage(
+                "⚠️ No response received.",
+                "ai"
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Chat error:",
+            error
+        );
 
         removeTyping();
 
-        addMessage("⚠️ Unable to connect to AI Buddy.", "ai");
+        addMessage(
+            "⚠️ Unable to connect to AI Buddy.",
+            "ai"
+        );
 
     }
 
 }
+
+
+// =======================================
+// Load Firestore History
+// =======================================
+
+async function loadChatHistory() {
+
+    console.log(
+        "Loading Firestore chat history..."
+    );
+
+
+    if (!window.currentUser) {
+
+        console.log(
+            "No Google user logged in."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        typeof window.loadFirestoreHistory !==
+        "function"
+    ) {
+
+        console.log(
+            "Firestore history function not ready."
+        );
+
+        return;
+
+    }
+
+
+    const history =
+        await window.loadFirestoreHistory();
+
+
+    if (!Array.isArray(history)) {
+
+        return;
+
+    }
+
+
+    // Clear current chat
+    chatBox.innerHTML = "";
+
+
+    // Display saved messages
+    history.forEach((msg) => {
+
+        addMessage(
+            msg.text,
+            msg.sender,
+            false
+        );
+
+    });
+
+
+    console.log(
+        "Loaded",
+        history.length,
+        "messages."
+    );
+
+}
+
+
+// =======================================
+// Firebase Authentication Ready
+// =======================================
+
+window.addEventListener(
+    "firebaseAuthReady",
+    async function (event) {
+
+        console.log(
+            "Firebase authentication ready."
+        );
+
+        if (event.detail.user) {
+
+            await loadChatHistory();
+
+        }
+
+    }
+);
+
 
 // =======================================
 // New Chat
@@ -221,7 +367,10 @@ function newChat() {
 
     chatBox.innerHTML = `
         <div class="message ai">
-            <div class="avatar">🤖</div>
+
+            <div class="avatar">
+                🤖
+            </div>
 
             <div class="bubble">
 
@@ -229,7 +378,11 @@ function newChat() {
 
                 <br><br>
 
-                New chat started.
+                Welcome to <b>AI Buddy</b>.
+
+                <br><br>
+
+                Ask me anything.
 
             </div>
 
@@ -238,124 +391,245 @@ function newChat() {
 
 }
 
+
 // =======================================
 // Enter Key
 // =======================================
 
-input.addEventListener("keypress", function (e) {
+input.addEventListener(
+    "keypress",
+    function (e) {
 
-    if (e.key === "Enter") {
-        sendMessage();
+        if (e.key === "Enter") {
+
+            sendMessage();
+
+        }
+
     }
+);
 
-});
 
 // =======================================
-// Load Saved Chat
+// Copy Message
 // =======================================
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    loadHistory();
-
-});
 
 function copyMessage(button) {
 
-    const text = button.parentElement.querySelector(".message-text").innerText;
+    const messageText =
+        button.parentElement
+        .querySelector(".message-text")
+        .innerText;
 
-    navigator.clipboard.writeText(text);
 
-    button.innerHTML = "✅ Copied";
+    navigator.clipboard.writeText(
+        messageText
+    );
+
+
+    button.innerHTML =
+        "✅ Copied";
+
 
     setTimeout(() => {
 
-        button.innerHTML = "📋 Copy";
+        button.innerHTML =
+            "📋 Copy";
 
     }, 2000);
 
 }
 
+
+// =======================================
+// File Upload
+// =======================================
+
 async function uploadFile() {
 
-    const file = fileInput.files[0];
+    const file =
+        fileInput.files[0];
 
-    if (!file) return;
 
-    const formData = new FormData();
+    if (!file) {
 
-    formData.append("file", file);
+        return;
+
+    }
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file
+    );
+
 
     try {
 
-        const response = await fetch("/upload", {
-            method: "POST",
-            body: formData
-        });
+        const response =
+            await fetch(
+                "/upload",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
 
-        const data = await response.json();
+
+        const data =
+            await response.json();
+
 
         if (data.success) {
 
-            addMessage(`📎 Uploaded: <b>${data.filename}</b>`, "user");
+            addMessage(
+                `📎 Uploaded: <b>${data.filename}</b>`,
+                "user"
+            );
 
-            addMessage(`✅ File uploaded successfully!`, "ai");
-
-        } else {
-
-            addMessage("❌ Upload failed.", "ai");
+            addMessage(
+                "✅ File uploaded successfully!",
+                "ai"
+            );
 
         }
 
-    } catch (err) {
+        else {
 
-        addMessage("⚠️ Server error while uploading.", "ai");
+            addMessage(
+                "❌ Upload failed.",
+                "ai"
+            );
+
+        }
 
     }
+
+    catch (error) {
+
+        console.error(
+            "Upload error:",
+            error
+        );
+
+        addMessage(
+            "⚠️ Server error while uploading.",
+            "ai"
+        );
+
+    }
+
 
     fileInput.value = "";
 
 }
 
+
 // =======================================
 // Image Preview
 // =======================================
 
-const previewArea = document.getElementById("preview-area");
-const previewImage = document.getElementById("preview-image");
-const previewName = document.getElementById("preview-name");
+const previewArea =
+    document.getElementById(
+        "preview-area"
+    );
 
-fileInput.addEventListener("change", function () {
+const previewImage =
+    document.getElementById(
+        "preview-image"
+    );
 
-    const file = this.files[0];
+const previewName =
+    document.getElementById(
+        "preview-name"
+    );
 
-    if (!file) return;
 
-    previewArea.style.display = "flex";
+if (fileInput) {
 
-    previewName.innerText = file.name;
+    fileInput.addEventListener(
+        "change",
+        function () {
 
-    if (file.type.startsWith("image/")) {
+            const file =
+                this.files[0];
 
-        const reader = new FileReader();
 
-        reader.onload = function (e) {
+            if (!file) {
 
-            previewImage.src = e.target.result;
+                return;
 
-            previewImage.style.display = "block";
+            }
 
-        };
 
-        reader.readAsDataURL(file);
+            if (previewArea) {
 
-    } else {
+                previewArea.style.display =
+                    "flex";
 
-        previewImage.style.display = "none";
+            }
 
-    }
 
-});
+            if (previewName) {
+
+                previewName.innerText =
+                    file.name;
+
+            }
+
+
+            if (
+                file.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function (e) {
+
+                        if (previewImage) {
+
+                            previewImage.src =
+                                e.target.result;
+
+                            previewImage.style.display =
+                                "block";
+
+                        }
+
+                    };
+
+
+                reader.readAsDataURL(
+                    file
+                );
+
+            }
+
+            else {
+
+                if (previewImage) {
+
+                    previewImage.style.display =
+                        "none";
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
 
 // =======================================
 // Remove Preview
@@ -363,13 +637,32 @@ fileInput.addEventListener("change", function () {
 
 function removePreview() {
 
-    fileInput.value = "";
+    if (fileInput) {
 
-    previewArea.style.display = "none";
+        fileInput.value = "";
 
-    previewImage.src = "";
+    }
 
-    previewName.innerText = "";
+
+    if (previewArea) {
+
+        previewArea.style.display =
+            "none";
+
+    }
+
+
+    if (previewImage) {
+
+        previewImage.src = "";
+
+    }
+
+
+    if (previewName) {
+
+        previewName.innerText = "";
+
+    }
 
 }
-
