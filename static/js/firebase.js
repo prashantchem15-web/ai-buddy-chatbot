@@ -106,29 +106,20 @@ let currentUser = null;
 onAuthStateChanged(auth, (user) => {
 
     currentUser = user;
-
     window.currentUser = user;
 
     console.log("Current user:", user);
 
     const loginButton = document.getElementById("login-btn");
-
     const logoutButton = document.getElementById("logout-btn");
-
     const userName = document.getElementById("user-name");
-
     const userPhoto = document.getElementById("user-photo");
-
 
     if (user) {
 
-        if (loginButton) {
-            loginButton.style.display = "none";
-        }
+        if (loginButton) loginButton.style.display = "none";
 
-        if (logoutButton) {
-            logoutButton.style.display = "block";
-        }
+        if (logoutButton) logoutButton.style.display = "block";
 
         if (userName) {
             userName.innerText = user.displayName || "AI Buddy User";
@@ -142,13 +133,9 @@ onAuthStateChanged(auth, (user) => {
 
     } else {
 
-        if (loginButton) {
-            loginButton.style.display = "block";
-        }
+        if (loginButton) loginButton.style.display = "block";
 
-        if (logoutButton) {
-            logoutButton.style.display = "none";
-        }
+        if (logoutButton) logoutButton.style.display = "none";
 
         if (userName) {
             userName.innerText = "";
@@ -158,8 +145,14 @@ onAuthStateChanged(auth, (user) => {
 
     }
 
-});
+    // Tell script.js that Firebase authentication is ready
+    window.dispatchEvent(
+        new CustomEvent("firebaseAuthReady", {
+            detail: { user: user }
+        })
+    );
 
+});
 
 // =======================================
 // Save Message to Firestore
